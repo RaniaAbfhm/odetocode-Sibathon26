@@ -1,9 +1,22 @@
 import java.util.Scanner;
+import java.sql.*;
+
+        String url = "jdbc:mysql://localhost:3306/sibathon";
+        String user = "root";
+        String password = "#GreatZara1";
+
+        try {
+            Connection con = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to MySQL!");
+        } 
+        catch (Exception e) {
+            System.out.println(e);
+        }
 
 class medicine {
-    public String name;
-    public String time;
-    public boolean taken;
+    String name;
+    String time;
+    boolean taken;
 
     Scanner input = new Scanner(System.in);
 
@@ -30,7 +43,10 @@ class medicine {
 
         } while (choice.equalsIgnoreCase("yes"));
     }
-    String gettime(){
-        return time;
+
+    public static void main(String[] args) {
+        // Create a temporary Medicine object to call the instance method
+        medicine temp = new medicine("", "");
+        temp.takemedinfo();
     }
 }
