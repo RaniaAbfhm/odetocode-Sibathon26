@@ -58,13 +58,7 @@ public class MainGui {
             });
         });
 
-        // Action for Medicine Tracker button (placeholder for now)
-        medicineTrackerButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame,
-                "Medicine Tracker is under development.",
-                "Coming Soon",
-                JOptionPane.INFORMATION_MESSAGE);
-        });
+        medicineTrackerButton.addActionListener(e -> { SwingUtilities.invokeLater(() -> { new MedicineInterface().setVisible(true); // Launch Medicine Tracker }); });
 
         // Make frame visible
         frame.setVisible(true);
@@ -74,3 +68,4 @@ public class MainGui {
         new MainGui();
     }
 }
+
