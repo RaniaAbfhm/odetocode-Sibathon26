@@ -39,7 +39,7 @@ public class MedicineReminder {
                 );
                 
                 Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT name, time FROM medicine");
+                ResultSet rs = stmt.executeQuery("SELECT name, time FROM medicines");
                 
                 while (rs.next()) {
                     String medicineName = rs.getString("name");
