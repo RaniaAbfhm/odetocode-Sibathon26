@@ -27,7 +27,7 @@ class HealthTracker {
             Connection myconnection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/sibathon",
                 "root",
-                "#GreatZara1"
+                "lote373"
             );
 
             String query_command = "INSERT INTO healthtracker(sleepHours, exercise_minutes, water_intake, date_entery) VALUES(?,?,?,?)";
@@ -66,3 +66,4 @@ class HealthTracker {
 
     
 }
+
