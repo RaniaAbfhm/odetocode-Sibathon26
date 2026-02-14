@@ -1,135 +1,76 @@
-import java.util.Scanner;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-class medicine{
-    Scanner input = new Scanner(System.in);
+public class medicine {
 
-    void takemedinfo() {
-        String choice;
-        do {
-            System.out.print("Enter Medicine Name: ");
-            String name = input.nextLine();
-
-            System.out.print("Enter Time you take this medicine: ");
-            String time = input.nextLine();
-
-            System.out.println("Name=" + name + ", Time=" + time);
-
-            try {
-               
-                Class.forName("com.mysql.cj.jdbc.Driver");
-
-               
-                Connection myconnection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/sibathon",
-                    "root",
-                    "lote373"
-                );
-
-                
-                String query = "INSERT INTO medicines(name, time) VALUES(?, ?)";
-                PreparedStatement pre = myconnection.prepareStatement(query);
-
-                pre.setString(1, name);
-                pre.setString(2, time);
-
-               
-                int rows = pre.executeUpdate();
-                
-                if(rows > 0)
-                    System.out.println("Inserted into database successfully!");
-
-                myconnection.close();
-                
-            } catch(Exception e) {
-                
-                e.printStackTrace();
-            }
-
-            System.out.print("Do you want to enter another Medicine (yes/no): ");
-            choice = input.nextLine();
-
-        } while (choice.equalsIgnoreCase("yes"));
-    }
-    
-    void updateMedicineName()
-    {
-        
-
-    System.out.print("Enter the current medicine name to update: ");
-    String oldName = input.nextLine();
-
-    System.out.print("Enter the new medicine name: ");
-    String newName = input.nextLine();
-
-    try {
-        Connection myconnection = DriverManager.getConnection(
+    private Connection getConnection() throws Exception {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection(
             "jdbc:mysql://localhost:3306/sibathon",
             "root",
             "lote373"
         );
-
-        String query = "UPDATE medicines SET name = ? WHERE name = ?";
-        PreparedStatement pst = myconnection.prepareStatement(query);
-        pst.setString(1, newName);
-        pst.setString(2, oldName);
-
-        int rows = pst.executeUpdate();
-        if(rows > 0)
-            System.out.println("Medicine name updated successfully!");
-        else
-            System.out.println("No medicine found with that name.");
-
-        myconnection.close();
-        }
-         catch(Exception e) 
-         {
-          e.printStackTrace();
-         }
     }
 
-    void deleteMedicine()
-    {
-      
-      System.out.println("Delete Medicine Record of Tablet: ");
-      String del=input.nextLine();
+    public boolean addMedicine(String name, String time) {
+        try (Connection conn = getConnection()) {
+            String query = "INSERT INTO medicines(name, time) VALUES(?, ?)";
+            PreparedStatement pre = conn.prepareStatement(query);
+            pre.setString(1, name);
+            pre.setString(2, time);
 
-      try{
-        
-        Connection myconnection=DriverManager.getConnection
-        (
-             "jdbc:mysql://localhost:3306/sibathon","root","lote373"
-
-        );
-
-        String del_query= "DELETE FROM medicines WHERE name = ?";
-
-        PreparedStatement ps= myconnection.prepareStatement(del_query);
-
-        ps.setString(1,del);
-
-        
-          int rowsDeleted = ps.executeUpdate();
-
-        if(rowsDeleted > 0)
-         {
-            System.out.println("Deleted " + rowsDeleted + " record(s) successfully!");
-         }
-        else 
-         {
-            System.out.println("No medicine found with that name.");
-         }
-
-         myconnection.close();
-
-    } 
-    catch(Exception e) 
-        {
-         e.printStackTrace();
+            int rows = pre.executeUpdate();
+            return rows > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-
     }
 
+    public boolean updateMedicine(String oldName, String newName, String newTime) {
+        try (Connection conn = getConnection()) {
+            String query = "UPDATE medicines SET name = ?, time = ? WHERE name = ?";
+            PreparedStatement pst = conn.prepareStatement(query);
+            pst.setString(1, newName);
+            pst.setString(2, newTime);
+            pst.setString(3, oldName);
 
-    
+            int rows = pst.executeUpdate();
+            return rows > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteMedicine(String name) {
+        try (Connection conn = getConnection()) {
+            String query = "DELETE FROM medicines WHERE name = ?";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, name);
+
+            int rowsDeleted = ps.executeUpdate();
+            return rowsDeleted > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<String> listMedicines() {
+        List<String> meds = new ArrayList<>();
+        try (Connection conn = getConnection()) {
+            String query = "SELECT name, time FROM medicines";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                meds.add(rs.getString("name") + " - " + rs.getString("time"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return meds;
+    }
 }
