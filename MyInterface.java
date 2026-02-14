@@ -1,61 +1,106 @@
 import javax.swing.*;
-import java.awt.*;
+import java.io.*;
 
 public class MyInterface extends JFrame {
 
- MyInterface() {
-        setTitle("Your DocMate");
-        setSize(500, 600);
-        setLocationRelativeTo(null);
+    private JComboBox<String> feverBox, coughBox, fatigueBox, headacheBox, nauseaBox;
+    private JButton predictButton;
+    private JLabel resultLabel;
+
+    public MyInterface() {
+        setTitle("DocMate AI Doctor");
+        setSize(400, 400);
+        setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-       
-        JPanel header = new JPanel(new BorderLayout());
-        header.setPreferredSize(new Dimension(500, 80));
-        header.setBackground(new Color(7, 94, 84));
+        String[] options = {"0 = No", "1 = Yes"};
 
-        JLabel title = new JLabel("Your DocMate", JLabel.CENTER);
-        title.setForeground(Color.WHITE);
-        title.setFont(new Font("SANS_SERIF", Font.BOLD, 28));
-        header.add(title, BorderLayout.CENTER);
+        JLabel lbl1 = new JLabel("Fever:");
+        lbl1.setBounds(50, 30, 100, 20);
+        add(lbl1);
+        feverBox = new JComboBox<>(options);
+        feverBox.setBounds(150, 30, 200, 25);
+        add(feverBox);
 
-        JLabel status = new JLabel("Status: Active");
-        status.setForeground(Color.LIGHT_GRAY);
-        status.setFont(new Font("SANS_SERIF", Font.PLAIN, 14));
-        header.add(status, BorderLayout.SOUTH);
+        JLabel lbl2 = new JLabel("Cough:");
+        lbl2.setBounds(50, 70, 100, 20);
+        add(lbl2);
+        coughBox = new JComboBox<>(options);
+        coughBox.setBounds(150, 70, 200, 25);
+        add(coughBox);
 
-        add(header, BorderLayout.NORTH);
+        JLabel lbl3 = new JLabel("Fatigue:");
+        lbl3.setBounds(50, 110, 100, 20);
+        add(lbl3);
+        fatigueBox = new JComboBox<>(options);
+        fatigueBox.setBounds(150, 110, 200, 25);
+        add(fatigueBox);
 
-  
-        JTextArea logArea = new JTextArea();
-        logArea.setEditable(false);
-        logArea.setFont(new Font("MONOSPACED", Font.PLAIN, 14));
-        logArea.setLineWrap(true);
-        logArea.setWrapStyleWord(true);
+        JLabel lbl4 = new JLabel("Headache:");
+        lbl4.setBounds(50, 150, 100, 20);
+        add(lbl4);
+        headacheBox = new JComboBox<>(options);
+        headacheBox.setBounds(150, 150, 200, 25);
+        add(headacheBox);
 
-        JScrollPane scroll = new JScrollPane(logArea);
-        add(scroll, BorderLayout.CENTER);
+        JLabel lbl5 = new JLabel("Nausea:");
+        lbl5.setBounds(50, 190, 100, 20);
+        add(lbl5);
+        nauseaBox = new JComboBox<>(options);
+        nauseaBox.setBounds(150, 190, 200, 25);
+        add(nauseaBox);
 
+        predictButton = new JButton("Predict");
+        predictButton.setBounds(50, 230, 300, 30);
+        add(predictButton);
 
-        JPanel inputPanel = new JPanel(new BorderLayout());
-        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        resultLabel = new JLabel("Prediction: ");
+        resultLabel.setBounds(50, 270, 300, 30);
+        add(resultLabel);
 
-        JTextField text1 = new JTextField();
-        text1.setFont(new Font("SANS_SERIF", Font.PLAIN, 16));
-        inputPanel.add(text1, BorderLayout.CENTER);
+        predictButton.addActionListener(e -> predictButtonActionPerformed());
+    } // <-- close constructor
 
-        JButton send = new JButton("Send");
-        send.setFont(new Font("SANS_SERIF", Font.BOLD, 16));
-        send.setBackground(new Color(7, 94, 84));
-        send.setForeground(Color.WHITE);
-        inputPanel.add(send, BorderLayout.EAST);
+    private void predictButtonActionPerformed() {
+        try {
+            String s1 = feverBox.getSelectedItem().toString().substring(0,1);
+            String s2 = coughBox.getSelectedItem().toString().substring(0,1);
+            String s3 = fatigueBox.getSelectedItem().toString().substring(0,1);
+            String s4 = headacheBox.getSelectedItem().toString().substring(0,1);
+            String s5 = nauseaBox.getSelectedItem().toString().substring(0,1);
 
-        add(inputPanel, BorderLayout.SOUTH);
+            ProcessBuilder pb = new ProcessBuilder(
+                "python", "predict.py", s1, s2, s3, s4, s5
+            );
+            pb.directory(new File("C:\\Users\\Modern Tech\\Desktop\\Docmate"));
+            pb.redirectErrorStream(true);
 
-        setVisible(true);
-    }
+            Process process = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            StringBuilder output = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+            reader.close();
+
+            int exitCode = process.waitFor();
+            if (exitCode == 0 && output.length() > 0) {
+                resultLabel.setText("Prediction: " + output.toString().trim());
+            } else {
+                resultLabel.setText("No prediction received or error occurred.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultLabel.setText("Error predicting disease.");
+        }
+    } 
 
     public static void main(String[] args) {
-        new MyInterface();
-    }
-}
+        SwingUtilities.invokeLater(() -> {
+            new MyInterface().setVisible(true);
+        });
+    } 
+
+} 
