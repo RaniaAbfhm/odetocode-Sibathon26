@@ -1,0 +1,16 @@
+fever,cough,headache,fatigue,sore_throat,shortness_of_breath,chest_pain,nausea,vomiting,diarrhea,body_ache,runny_nose,loss_of_smell,itching,skin_rash,disease
+1,1,1,1,1,0,0,0,0,0,1,1,0,0,0,Flu
+1,1,0,1,1,0,0,0,0,0,0,1,0,0,0,Flu
+1,0,1,1,0,0,0,1,0,0,1,0,0,0,0,Dengue
+1,0,1,1,0,0,0,1,1,0,1,0,0,0,0,Dengue
+0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,Common Cold
+0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,Common Cold
+1,1,1,1,1,1,0,0,0,0,1,0,1,0,0,COVID-19
+1,1,1,1,0,1,0,0,0,0,1,0,1,0,0,COVID-19
+0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,Heart Disease
+0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,Heart Disease
+1,0,1,1,0,0,0,1,1,1,1,0,0,0,0,Food Poisoning
+0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,Allergy
+0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,Allergy
+1,1,0,1,1,1,1,0,0,0,1,0,1,0,0,Pneumonia
+1,1,0,1,1,1,1,0,0,0,1,0,0,0,0,Pneumonia

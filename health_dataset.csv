@@ -1,0 +1,11 @@
+water_liters,sleep_hours,exercise_minutes,health_status
+3.0,8,30,Healthy
+2.5,7,20,Healthy
+1.5,6,10,Warning
+1.0,5,0,High Risk
+0.8,4,0,High Risk
+2.0,6,15,Warning
+3.2,8,45,Healthy
+1.2,5,5,High Risk
+2.2,7,10,Warning
+3.0,9,60,Healthy
